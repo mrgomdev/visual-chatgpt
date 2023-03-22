@@ -22,6 +22,7 @@ from langchain.agents.initialize import initialize_agent
 from langchain.agents.tools import Tool
 from langchain.chains.conversation.memory import ConversationBufferMemory
 from langchain.llms.openai import OpenAI
+from langchain.chat_models import ChatOpenAI
 
 VISUAL_CHATGPT_PREFIX = """Visual ChatGPT is designed to be able to assist with a wide range of text and visual related tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. Visual ChatGPT is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.
 
@@ -819,7 +820,8 @@ class ConversationBot:
         if 'ImageCaptioning' not in load_dict:
             raise ValueError("You have to load ImageCaptioning as a basic function for VisualChatGPT")
 
-        self.llm = OpenAI(temperature=0)
+        #self.llm = OpenAI(temperature=0)
+        self.llm = ChatOpenAI(temperature=0, model_name='gpt-4')
         self.memory = ConversationBufferMemory(memory_key="chat_history", output_key='output')
 
         self.models = {}
@@ -836,7 +838,7 @@ class ConversationBot:
         self.agent = initialize_agent(
             self.tools,
             self.llm,
-            agent="conversational-react-description",
+            agent="chat-conversational-react-description",
             verbose=True,
             memory=self.memory,
             return_intermediate_steps=True,
